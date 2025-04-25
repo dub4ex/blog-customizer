@@ -23,15 +23,14 @@ import {
 } from 'src/constants/articleProps';
 
 export interface IArticleParamsFormProps {
-	articleState: ArticleStateType;
 	setArticleState: Dispatch<SetStateAction<ArticleStateType>>;
 }
 
 export const ArticleParamsForm = (props: IArticleParamsFormProps) => {
-	const { articleState, setArticleState } = props;
+	const { setArticleState } = props;
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [articleFormState, setArticleFormState] =
-		useState<ArticleStateType>(articleState);
+		useState<ArticleStateType>(defaultArticleState);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	const toggleIsOpen = () => {
@@ -43,12 +42,6 @@ export const ArticleParamsForm = (props: IArticleParamsFormProps) => {
 		(prop: keyof ArticleStateType) => (value: OptionType) => {
 			setArticleFormState({ ...articleFormState, [prop]: value });
 		};
-
-	const fontFamilyChange = handleChange('fontFamilyOption');
-	const fontSizeChange = handleChange('fontSizeOption');
-	const fontColorsChange = handleChange('fontColor');
-	const backgroundColorsChange = handleChange('backgroundColor');
-	const contentWidthChange = handleChange('contentWidth');
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -76,44 +69,40 @@ export const ArticleParamsForm = (props: IArticleParamsFormProps) => {
 					className={styles.form}
 					onSubmit={handleSubmit}
 					onReset={handleReset}>
-					<Text
-						children={`задайте параметры`}
-						as={'h2'}
-						size={31}
-						weight={800}
-						uppercase
-					/>
+					<Text as={'h2'} size={31} weight={800} uppercase>
+						задайте параметры
+					</Text>
 					<Select
 						options={fontFamilyOptions}
 						selected={articleFormState.fontFamilyOption}
 						title='шрифт'
-						onChange={fontFamilyChange}
+						onChange={(value) => handleChange('fontFamilyOption')(value)}
 					/>
 					<RadioGroup
 						name='fontSizeOptions'
 						options={fontSizeOptions}
 						selected={articleFormState.fontSizeOption}
 						title='размер шрифта'
-						onChange={fontSizeChange}
+						onChange={(value) => handleChange('fontSizeOption')(value)}
 					/>
 					<Select
 						selected={articleFormState.fontColor}
 						options={fontColors}
 						title='цвет шрифта'
-						onChange={fontColorsChange}
+						onChange={(value) => handleChange('fontColor')(value)}
 					/>
 					<Separator />
 					<Select
 						selected={articleFormState.backgroundColor}
 						options={backgroundColors}
 						title='цвет фона'
-						onChange={backgroundColorsChange}
+						onChange={(value) => handleChange('backgroundColor')(value)}
 					/>
 					<Select
 						selected={articleFormState.contentWidth}
 						options={contentWidthArr}
 						title='ширина контента'
-						onChange={contentWidthChange}
+						onChange={(value) => handleChange('contentWidth')(value)}
 					/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' />
